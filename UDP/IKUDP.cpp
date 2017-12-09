@@ -5,18 +5,25 @@
 #define DAYTIME_DEF_COUNT    10  
 
 void IKUDP:: _init_wsadata() {
+	WSADATA wsa;         //用于iksock初始化
 	WSAStartup(WINSOCK_VERSION, &wsa);
-	iksock = socket(AF_INET, SOCK_DGRAM, 0);
+	
 	if (iksock == INVALID_SOCKET)
 			throw std::system_error(WSAGetLastError(), std::system_category(), "Error opening socket");
 
 }
+int IKUDP::count_of_obj = 0;
+
 IKUDP::IKUDP():iksock(0),flag(0)
 {
-	_init_wsadata();
+	if (count_of_obj == 0)
+		_init_wsadata();
+	iksock = socket(AF_INET, SOCK_DGRAM, 0);
+	count_of_obj++;
+
 	_init_buffer();
 }
-//IKUDP::IKUDP(addr_config &config_):port(config_.port), flag(0)
+//IKUDP::IKUDP(addr_config &config_):port(config_.), flag(0)
 //{
 //	_init_wsadata();
 //	_init_buffer();
@@ -29,29 +36,13 @@ void IKUDP::_init_buffer()
 
 IKUDP::~IKUDP()
 {
+	count_of_obj--;
 	closesocket(iksock);
 	WSACleanup();
 }
-bool IKUDP::Send(const std::string& buffer) 
+bool IKUDP::Send(const std::string &buffer, sockaddr_in &to_addr)
 {
-	return Send(buffer.c_str(), buffer.length());
-}
-
-
-bool IKUDP::Send(const char *buffer, int buffer_len)
-{
-
-	if (addr.sin_addr.s_addr == INADDR_NONE)
-		throw std::system_error(WSAGetLastError(), std::system_category(), "sendto failed");
-	int ret = sendto(iksock, buffer, buffer_len, 0,
-		(struct sockaddr *)&addr, sizeof(addr));
-	if (ret == buffer_len)      //完全发送算作发送成功
-		return true;
-	else  //发送失败
-	{
-		std::cout << "send error with" << WSAGetLastError() << std::endl;
-		return false;
-	}
+	return Send(buffer.c_str(), buffer.length(), to_addr);
 }
 
 bool IKUDP::Send(const char * buffer,int buffer_len, sockaddr_in &to_addr)
@@ -59,7 +50,7 @@ bool IKUDP::Send(const char * buffer,int buffer_len, sockaddr_in &to_addr)
 	if (to_addr.sin_addr.s_addr == INADDR_NONE)
 		throw std::system_error(WSAGetLastError(), std::system_category(), "sendto failed");
 	int ret = sendto(iksock, buffer, buffer_len, 0,
-		(struct sockaddr *)&to_addr, sizeof(addr));
+		(struct sockaddr *)&to_addr, sizeof(to_addr));
 	if (ret == buffer_len)      //完全发送算作发送成功
 		return true;
 	else  //发送失败

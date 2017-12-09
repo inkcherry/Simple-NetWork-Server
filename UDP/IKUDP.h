@@ -15,24 +15,21 @@ struct addr_config {
 class IKUDP
 {
 public:
+	static int count_of_obj;
 	IKUDP();
 	~IKUDP();
-	bool Send(const char *buffer, int buffer_len);
-	bool Send(const std::string& buffer);  //发送出去但不一定保证接受到
 	bool Send(const char * buffer, int buffer_len, sockaddr_in &to_addr);
+	bool Send(const std::string&buffer, sockaddr_in&to_addr);
 	sockaddr_in Recv(char *buffer);
 	void ReSet_buffer_size(int &buffer_size_);          
 	/*const int  Get_buffer_size() { return buffer_size; }*/
 private:
 	void _init_buffer();
-	void _init_wsadata();   
-	std::string address;   
-	int port;			   
-	WSADATA wsa;         //用于iksock初始化
+	void _init_wsadata();   	   
 	int flag;            //flag默认为0 考虑提供config配置
 	std::pair<int, char*>buffer_config;   //first:buffer length second:buffer; 默认为64;
 protected:
 	SOCKET iksock;       //原始对象 
-	sockaddr_in addr;    //本地  Server需要绑定端口 
+
 };
 
