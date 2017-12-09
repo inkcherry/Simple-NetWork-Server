@@ -16,3 +16,4 @@ void IKUDP_SERVER::Bind(const UINT port)
 		std::cout << "bind error " << WSAGetLastError();
 	std::cout << "serving runing" << std::endl;
 }
+

@@ -19,6 +19,7 @@ public:
 	~IKUDP();
 	bool Send(const char *buffer, int buffer_len);
 	bool Send(const std::string& buffer);  //发送出去但不一定保证接受到
+	bool Send(const char * buffer, int buffer_len, sockaddr_in &to_addr);
 	sockaddr_in Recv(char *buffer);
 	void ReSet_buffer_size(int &buffer_size_);          
 	/*const int  Get_buffer_size() { return buffer_size; }*/

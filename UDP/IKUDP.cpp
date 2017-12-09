@@ -54,8 +54,25 @@ bool IKUDP::Send(const char *buffer, int buffer_len)
 	}
 }
 
+bool IKUDP::Send(const char * buffer,int buffer_len, sockaddr_in &to_addr)
+{
+	if (to_addr.sin_addr.s_addr == INADDR_NONE)
+		throw std::system_error(WSAGetLastError(), std::system_category(), "sendto failed");
+	int ret = sendto(iksock, buffer, buffer_len, 0,
+		(struct sockaddr *)&to_addr, sizeof(addr));
+	if (ret == buffer_len)      //完全发送算作发送成功
+		return true;
+	else  //发送失败
+	{
+		std::cout << "send error with" << WSAGetLastError() << std::endl;
+		return false;
+	}
+}
+
+
 sockaddr_in IKUDP::Recv(char *buffer)  
-{  
+{
+	memset(buffer, 0, sizeof(char)*buffer_config.first);
 	sockaddr_in peer_addr;  //from（默认的监听addr)
 	int peer_addr_size = sizeof(peer_addr);
 	int ret=recvfrom(iksock,buffer,buffer_config.first, flag,
