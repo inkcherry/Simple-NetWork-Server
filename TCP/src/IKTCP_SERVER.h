@@ -12,19 +12,23 @@
 class IKTCP_SERVER
 {
 public:
-    IKTCP_SERVER(const int &port);
-    std::string Recv(int buffer_len_ = 128);
-    std::string Read();
+    IKTCP_SERVER( int port);
+    std::string Recv();
     void Send(const std::string &buffer);
     static std::string message;
-private:
+    std::string Get_message();
+    void clean();
+    void detach();
+
+    char msg[64];
     pthread_t server_thread;
-    void _init_sock(const int &port);
+    void _init_sock();
     int iksock,next_iksock;
     int port;
     sockaddr_in server_addr,client_addr;
     std::string address;
-   
     const static int buffer_len=64;
-	static void * add_task(void * argv);
+    private:
+    static void * add_task(void * argv);
+   
 };

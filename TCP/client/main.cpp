@@ -13,11 +13,12 @@ int main(int argc,char *argv[])
 			std::string recv_buffer = cln.Recv();
 			if( recv_buffer!= "" )
 			{
-				std::cout << "Server Response:" << recv_buffer << std::endl;
+				std::cout << "#SERVER ECHO:" << recv_buffer << std::endl;
 			}
 			sleep(1);
 		}
 		exit(0);
 		return 0;
 	}
+	else std::cout << "Error: message num-request" << std::endl;
 }

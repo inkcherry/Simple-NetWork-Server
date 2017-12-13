@@ -29,11 +29,11 @@ bool IKTCP_CLIENT::Send(const std::string &buffer)
 std::string IKTCP_CLIENT::Recv(const int buffer_len)
 {   
   	char buffer[buffer_len];
-  	std::string reply;
+  
 	if( recv(iksock , buffer,buffer_len, 0) < 0)// sizeof(buffer) 
   	{
 	    std::cout << "receive failed!" << std::endl;
   	}
 	buffer[buffer_len]='\0';
-  	return (std::string)reply;
+  	return (std::string)buffer;
 }

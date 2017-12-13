@@ -1,10 +1,8 @@
 #include "IKUDP_CLIENT.h"
 
-
-
 IKUDP_CLIENT::IKUDP_CLIENT(const std::string &address_, const int &port):IKUDP()
 {
-	_init_sockaddr(address_, port);  //³õÊ¼»¯iksockÒÔ¼°addr
+	_init_sockaddr(address_, port);  //ï¿½ï¿½Ê¼ï¿½ï¿½iksockï¿½Ô¼ï¿½addr
 }
 IKUDP_CLIENT::~IKUDP_CLIENT()
 {	iksock = socket(AF_INET, SOCK_DGRAM, 0);
@@ -12,10 +10,10 @@ IKUDP_CLIENT::~IKUDP_CLIENT()
 void IKUDP_CLIENT::_init_sockaddr(const std::string &address_,const int &port)
 {
 	iksock = socket(AF_INET, SOCK_DGRAM, 0);
-	int flag = 1;												//ÔÝ¶¨
+	int flag = 1;												//ï¿½Ý¶ï¿½
 	addr.sin_family = AF_INET;
-	InetPton(AF_INET, address_.c_str(), &addr.sin_addr.s_addr);  //³õÊ¼»¯sin_addr.s_addr
-    //µÈ¼ÛÓÚ addr.sin_addr.s_addr = inet_addr(dest);
+	InetPton(AF_INET, address_.c_str(), &addr.sin_addr.s_addr);  //ï¿½ï¿½Ê¼ï¿½ï¿½sin_addr.s_addr
+    //ï¿½È¼ï¿½ï¿½ï¿½ addr.sin_addr.s_addr = inet_addr(dest);
 	addr.sin_port = htons(port);
 }
 bool IKUDP_CLIENT::Send(const std::string& buffer)
@@ -31,9 +29,9 @@ bool IKUDP_CLIENT::Send(const char *buffer, int buffer_len)
 		throw std::system_error(WSAGetLastError(), std::system_category(), "sendto failed");
 	int ret = sendto(iksock, buffer, buffer_len, 0,
 		(struct sockaddr *)&addr, sizeof(addr));
-	if (ret == buffer_len)      //ÍêÈ«·¢ËÍËã×÷·¢ËÍ³É¹¦
+	if (ret == buffer_len)      //ï¿½ï¿½È«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í³É¹ï¿½
 		return true;
-	else  //·¢ËÍÊ§°Ü
+	else  //ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½
 	{
 		std::cout << "send error with" << WSAGetLastError() << std::endl;
 		return false;
