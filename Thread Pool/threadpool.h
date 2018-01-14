@@ -15,7 +15,7 @@ class ThreadPool {
 public:
 
 	ThreadPool(int number=4);
-	~ThreadPool() {}
+	~ThreadPool();
 	template<class F, class... Args>
 	auto run_new_task(F&&f, Args&&...args)->std::future<decltype(f(args...))>;
 	inline void set_tasks_states(const bool &can_add_task_) {if (can_add_task_==1) can_add_task.store(true);else { can_add_task.store(false); }};            //ÉèÖÃÈÎÎñ×´Ì¬£»

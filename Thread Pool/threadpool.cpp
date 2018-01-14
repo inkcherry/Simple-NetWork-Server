@@ -14,6 +14,18 @@ ThreadPool::ThreadPool(int number) :can_add_task(true)
 		pool.emplace_back(&ThreadPool::dispatch, this);
 	}
 }
+ThreadPool::~ThreadPool()
+{
+	//禁止添加add task
+	std::unique_lock<std::mutex> lock(mtx);
+	can_add_task = false;
+
+
+	for (auto &thread : pool)
+	{
+		thread.join();  //等待所有子线程执行结束
+	}
+}
 void ThreadPool::dispatch()
 {
 	while (true) {
